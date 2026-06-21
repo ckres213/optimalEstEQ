@@ -1,0 +1,177 @@
+\section{A focused bivariate simulation study}\label{sec:simulation-focused-bivariate}
+
+The simulation study is designed to isolate the main statistical message of the paper rather than to survey many regimes.  We use a single moderate bivariate \emph{linear} Hawkes specification and compare three estimators: the likelihood benchmark, a just-identified non-score derivative GMM estimator, and an overidentified derivative-enriched non-score GMM estimator.  Although the theory allows nonlinear links and signed interactions, the linear Hawkes model is the canonical benchmark in which the Godambe comparison is easiest to interpret.  The goal is to check four things: first, that the likelihood score attains the Godambe benchmark; second, that enlarging a non-score feature space moves the Godambe covariance toward the Fisher bound; third, that all three estimators exhibit the same root-$T$ rate, with different covariance constants; and fourth, that the corresponding asymptotic normal confidence intervals have near-nominal coverage with widths ordered by their Godambe covariance constants.
+
+\subsection{Data-generating model}
+
+The process is bivariate, $D=2$, and has intensity
+\[
+    \lambda_i(t;\theta)
+    =
+    \mu_i+
+    \sum_{j=1}^2\alpha_{ij}X_j(t;\beta),
+    \qquad
+    X_j(t;\beta)=\int_{[t-A,t)}k_\beta(t-s)\,dN_j(s),
+\]
+where
+\[
+    k_\beta(u)
+    =
+    \frac{\beta e^{-\beta u}}{1-e^{-\beta A}}\mathbf 1\{0\le u\le A\}.
+\]
+The parameter is
+\[
+    \theta=(\mu_1,\mu_2,\alpha_{11},\alpha_{12},\alpha_{21},\alpha_{22},\beta),
+\]
+so the model contains two baselines, two self-excitation amplitudes, two cross-excitation amplitudes, and one shared decay parameter.  We set
+\[
+    A=3,
+    \qquad
+    \theta_0=(0.22,0.18,0.34,0.10,0.24,0.30,1.25).
+\]
+Equivalently,
+\[
+    \alpha_0=
+    \begin{pmatrix}
+        0.34 & 0.10\\
+        0.24 & 0.30
+    \end{pmatrix}.
+\]
+Because $k_\beta$ is normalised, the branching matrix is $\alpha_0$.  Its spectral radius is approximately $0.476$, and the stationary mean rates are approximately $(0.393,0.392)$.  Thus the process is neither close to a Poisson process nor close to the stability boundary.  The asymmetry $\alpha_{21}>\alpha_{12}$ makes the cross-excitation structure visible while keeping the optimisation problem well conditioned.
+
+\subsection{Estimators}
+
+The likelihood estimator is the conditional MLE on $[0,T]$, using the observed pre-sample window $[-A,0)$.  Its score is the compensator estimating equation with weight
+\[
+    H_{\rm score}(t;\theta)
+    =
+    D_\theta(t;\theta)^\top\Lambda(t;\theta)^{-1},
+    \qquad
+    D_\theta(t;\theta)=\partial_\theta\lambda(t;\theta),
+    \qquad
+    \Lambda(t;\theta)=\operatorname{diag}\{\lambda_1(t;\theta),\lambda_2(t;\theta)\}.
+\]
+The just-identified non-likelihood comparator uses the same derivative information but omits the inverse-intensity factor:
+\[
+    H_{\rm LS}(t;\theta)=D_\theta(t;\theta)^\top.
+\]
+Thus the just-identified non-score estimator solves, in least-squares form,
+\[
+    \Psi_T^{\rm LS}(\theta)
+    =
+    \int_0^T D_\theta(t;\theta)^\top\{dN(t)-\lambda(t;\theta)dt\}
+    \approx 0.
+\]
+The third estimator is an overidentified derivative-enriched non-score GMM estimator.  The paper-facing default uses the two-block bounded-inverse ladder
+\[
+H_{\rm aug}(t;\theta)=
+\begin{pmatrix}
+D_\theta(t;\theta)^\top \Phi_0(t;\theta)\\
+D_\theta(t;\theta)^\top \Phi_1(t;\theta)
+\end{pmatrix},
+\qquad q=14,
+\]
+where
+\[
+\Phi_r(t;\theta)=\operatorname{diag}\{\phi_{1r}(t;\theta),\phi_{2r}(t;\theta)\},
+\qquad
+\phi_{i0}=1,
+\qquad
+\phi_{i1}(t;\theta)=\frac{s_i}{s_i+\lambda_i(t;\theta)}.
+\]
+This is still overidentified for the seven-parameter bivariate model.  The original three-block ladder, which additionally includes
+\[
+\phi_{i2}(t;\theta)=\left\{\frac{s_i}{s_i+\lambda_i(t;\theta)}\right\}^2
+\]
+and has $q=21$, is available as a sensitivity option.  The default two-block version avoids the most collinear squared block while preserving the intended overidentified non-score GMM comparison.  In the default design $s_1=s_2=0.4$.  The augmented estimator is computed as a feasible two-step GMM estimator: the first step minimises the identity-weighted moment norm, the bracket covariance is estimated at the preliminary value, and the second step minimises the plug-in optimally weighted criterion.  The bounded inverse-intensity features do not include the exact score factor $1/\lambda_i(t;\theta)$, but they enrich the feature space in the direction of the score.
+
+\subsection{Population Godambe targets}
+
+The population targets are estimated from long stationary simulations.  For the score estimator,
+\[
+    I(\theta_0)
+    =
+    E_{\theta_0}\left[\sum_{i=1}^2
+    \frac{\nabla_\theta\lambda_i(0;\theta_0)\nabla_\theta\lambda_i(0;\theta_0)^\top}{\lambda_i(0;\theta_0)}\right]
+\]
+is the Fisher information and the asymptotic covariance is $I(\theta_0)^{-1}$.  For the just-identified non-score derivative moment, define
+\[
+    A_{\rm LS}
+    =
+    E_{\theta_0}\{D_\theta(0;\theta_0)^\top D_\theta(0;\theta_0)\},
+\]
+and
+\[
+    \Omega_{\rm LS}
+    =
+    E_{\theta_0}\{D_\theta(0;\theta_0)^\top
+    \Lambda(0;\theta_0)D_\theta(0;\theta_0)\}.
+\]
+Since the moment is just identified,
+\[
+    V_{\rm LS}
+    =
+    A_{\rm LS}^{-1}\Omega_{\rm LS}A_{\rm LS}^{-1}.
+\]
+For the augmented overidentified estimator, define
+\[
+    A_{\rm aug}=E_{\theta_0}\{H_{\rm aug}(0;\theta_0)D_\theta(0;\theta_0)\},
+    \qquad
+    \Omega_{\rm aug}=E_{\theta_0}\{H_{\rm aug}(0;\theta_0)\Lambda(0;\theta_0)H_{\rm aug}(0;\theta_0)^\top\}.
+\]
+The oracle optimal covariance is
+\[
+    V_{\rm aug}=\{A_{\rm aug}^\top\Omega_{\rm aug}^{-1}A_{\rm aug}\}^{-1}.
+\]
+Godambe optimality predicts
+\[
+    I(\theta_0)^{-1}\preceq V_{\rm aug}\preceq V_{\rm LS}
+\]
+at the population/oracle-GMM level when the augmented library captures additional score-relevant directions.  We visualise this using the eigenvalues of $I(\theta_0)^{1/2}VI(\theta_0)^{1/2}$ for $V=V_{\rm LS}$ and $V=V_{\rm aug}$, and by reporting per-parameter standard-error inflation factors relative to $I(\theta_0)^{-1}$.
+
+\subsection{Monte Carlo design}
+
+The default Monte Carlo grid is
+\[
+    T\in\{500,1000,2000,4000,8000\},
+\]
+with 400 replications at each horizon.  The population Godambe matrices are estimated using 32 independent long runs, each with $T_{\rm pop}=90{,}000$ and $90{,}000$ random time-evaluation points.  The simulation code uses the Poisson cluster representation.  The likelihood and just-identified derivative-moment compensator terms are evaluated using exact compact-support exponential integrals.  The additional augmented bounded-inverse compensator blocks and covariance matrices are evaluated by event/expiration-adaptive Gauss--Legendre quadrature, with breakpoints at event times and event times plus the support length $A$, rather than by a coarse deterministic time grid.
+
+\subsection{Diagnostics}
+
+The simulation produces the following diagnostics.
+
+\paragraph{Population Godambe inflation.}
+The figure \texttt{population\_godambe\_eigenvalues.pdf} plots the eigenvalues of $I^{1/2}VI^{1/2}$ for the two non-score GMM estimators and summary ratios such as trace inflation.  The figure \texttt{asymptotic\_se\_inflation\_by\_parameter.pdf} reports per-parameter standard-error inflation.  These plots directly target the comparison between the MLE, the augmented overidentified GMM estimator, and the just-identified derivative GMM estimator.
+
+\paragraph{Root-$T$ scaling and covariance constants.}
+The figure \texttt{standardized\_rmse\_by\_parameter.pdf} plots
+\[
+    \frac{\sqrt{T}\,\operatorname{RMSE}(\hat\theta_k)}{\sqrt{V_{kk}}},
+\]
+using $V=I^{-1}$ for the MLE, $V=V_{\rm LS}$ for \texttt{GMM\_Dtheta}, and $V=V_{\rm aug}$ for \texttt{GMM\_aug}.  Correct first-order calibration should move these ratios toward one.  The figure \texttt{loglog\_rmse\_curves.pdf} overlays RMSE curves with a reference slope $-1/2$, and \texttt{loglog\_rmse\_slopes.pdf} estimates the slopes parameter by parameter.
+
+
+\paragraph{Asymptotic confidence intervals.}
+For method $m\in\{\mathrm{MLE},\mathrm{LS},\mathrm{aug}\}$ and parameter coordinate $k$, we form the population-target asymptotic normal interval
+\[
+    \hat\theta_{m,k}\pm 1.96\sqrt{V_{m,kk}/T},
+\]
+where $V_m$ is $I(\theta_0)^{-1}$, $V_{\rm LS}$, or $V_{\rm aug}$ as appropriate.  The file \texttt{bivar\_asymptotic\_ci\_by\_parameter.csv} reports empirical coverage and interval width by parameter, horizon, and method, while \texttt{bivar\_asymptotic\_ci\_overall.csv} reports the corresponding method-level averages.  The figure \texttt{asymptotic\_ci\_coverage\_width.pdf} plots overall coverage against the nominal $0.95$ target and plots mean interval width relative to the MLE width.  This directly checks the fixed-parameter Gaussian limits and gives a more familiar inference-scale reading of the Godambe covariance comparison.
+
+\paragraph{LAN and sandwich calibration.}
+For each estimator, define
+\[
+    Q_T
+    =
+    T(\hat\theta-\theta_0)^\top V^{-1}(\hat\theta-\theta_0),
+\]
+with $V$ equal to that estimator's population covariance target.  The figure \texttt{lan\_quadratic\_quantile\_ratios.pdf} plots empirical quantiles of $Q_T$ divided by the corresponding $\chi^2_7$ quantiles.  The figure \texttt{empirical\_vs\_population\_covariance.pdf} compares the empirical covariance of $\sqrt{T}(\hat\theta-\theta_0)$ with the population covariance target.
+
+
+\paragraph{Paper plots.}
+The script \texttt{paper\_bivar\_four\_plots.R} creates the paper-facing PNGs: a clear population Godambe plot, an overall RMSE plot on the common MLE scale, an overall covariance-calibration plot on each estimator's own scale, an asymptotic-CI coverage/width plot, and a grouped log-log RMSE plot.
+
+\subsection{Interpretation}
+
+The study is considered successful if the population eigenvalues of $I^{1/2}V_{\rm LS}I^{1/2}$ and $I^{1/2}V_{\rm aug}I^{1/2}$ exceed one, with the augmented estimator closer to the MLE benchmark than the just-identified estimator, if all three estimators show slopes near $-1/2$ in the log-log RMSE plots, and if the asymptotic intervals approach nominal coverage as $T$ increases.  The CI width plot should show the same efficiency ordering as the Godambe targets: the MLE intervals are the shortest first-order intervals, the augmented GMM intervals are longer but closer to the MLE, and the just-identified derivative GMM intervals are typically widest.  The key point is that the non-score estimators should not converge at a slower rate; they should converge at the same root-$T$ rate with larger, but different, covariance constants.  This is exactly the distinction made by the Godambe comparison.

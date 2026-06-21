@@ -1,0 +1,14 @@
+Minimal clean SLURM source bundle for the bivariate Hawkes Godambe simulation.
+
+Included:
+- R/C++ source needed to run population, estimator, combine, and figure steps
+- Slurm scripts only
+- smoke-test and output-check scripts
+- manuscript TeX snippet and TeX patch helper
+- final article figure generator: make_article_bivar_pair.R
+
+Excluded intentionally:
+- previous run outputs: bivar_results, bivar_population, bivar_figures, bivar_figures_paper, logs, tmp
+- pilot outputs
+- backup files and old archives
+- PBS scripts
