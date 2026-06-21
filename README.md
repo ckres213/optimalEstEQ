@@ -39,3 +39,4 @@ check_bivar_outputs.sh                 output checker
 patch_tex_bivar_side_by_side.py        patches main TeX to use the combined figure
 focused_bivariate_simulation_section.tex manuscript section snippet
 ```
+All code within was created with the assistance of ChatGPT 5.5 Pro.
