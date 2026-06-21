@@ -1,4 +1,4 @@
-Bivariate Hawkes Godambe simulation
+This repository contains the code for the simulation study described in Section 5 of Optimal Estimating Equations for Compact-Memory Hawkes Processes by Louis Davis and Conor Kresin.
 
 Reproducibility code for a bivariate linear Hawkes simulation study comparing maximum likelihood with just-identified and over-identified GMM estimators. The repository contains the R/Rcpp implementation, Slurm array scripts, result aggregation, diagnostics, and manuscript figure generation.
 
